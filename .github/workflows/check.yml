@@ -1,6 +1,6 @@
 name: onepace
 on:
-  schedule: [{cron: "0 */3 * * *"}]
+  schedule: [{cron: "42 8 * * *"}]
   workflow_dispatch:
 permissions:
   contents: write
