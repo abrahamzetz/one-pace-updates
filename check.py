@@ -20,14 +20,16 @@ for item in root.iter("item"):
     seen.add(guid)
     if first_run: # seed silently
         continue
-    title = item.findtext("title")
+    title = item.findtext("title") or ""
     link = item.findtext("link")
     fname = item.findtext("t:fileName", default="", namespaces=NS)
-    m = re.search(r"\]\[(\d+)(?:-\d+)?\]", fname)
+    m = re.search(r"\]\[(\d+)(?:-\d+)?\]", fname + " " + title)
     if m and int(m.group(1)) >= MIN_CHAPTER:
+        clean = re.sub(r"^\[One Pace\]\[[\d-]+\]\s*", "", title)
+        clean = re.sub(r"\s*\[1080p\].*$", "", clean)
         urllib.request.urlopen(urllib.request.Request(
             f"https://ntfy.sh/{TOPIC}",
-            data=title.encode(),
+            data=(clean or title).encode(),
             headers={"Title": "New One Pace release", "Click": link},
         ))
 
