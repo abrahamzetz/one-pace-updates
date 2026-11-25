@@ -12,6 +12,7 @@ root = ET.fromstring(urllib.request.urlopen(req).read())
 
 first_run = not SEEN.exists()
 seen = set(SEEN.read_text().split()) if not first_run else set()
+print("first_run:", first_run, "| already seen:", len(seen))
 
 for item in root.iter("item"):
     guid = item.findtext("guid")
@@ -24,6 +25,7 @@ for item in root.iter("item"):
     link = item.findtext("link")
     fname = item.findtext("t:fileName", default="", namespaces=NS)
     m = re.search(r"\]\[(\d+)(?:-\d+)?\]", fname + " " + title)
+    print("new item:", title[:60], "| start chapter:", m.group(1) if m else None)
     if m and int(m.group(1)) >= MIN_CHAPTER:
         clean = re.sub(r"^\[One Pace\]\[[\d-]+\]\s*", "", title)
         clean = re.sub(r"\s*\[1080p\].*$", "", clean)
